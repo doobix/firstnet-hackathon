@@ -1,0 +1,26 @@
+.tweet {
+  background-color: #eed2ff;
+  border-radius: 5px;
+  text-align: left;
+  padding: 5px;
+}
+
+.tweet-info {
+
+}
+
+.tweet-name {
+  font-weight: bold;
+}
+
+.tweet-username {
+  margin: 0 5px;
+}
+
+.tweet-time {
+  font-size: 10px;
+}
+
+.tweet-post {
+  margin: 0;
+}
