@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import ListView from './ListView';
 import MapView from './MapView';
 import './App.css';
-import { ButtonsGroup, Colors, Header, Icon, InputWithButton } from 'watson-react-components';
+import { ButtonsGroup, Colors, Icon, InputWithButton } from 'watson-react-components';
 
+const GEO_API = 'http://firstnet18.herokuapp.com/geo';
 const WATSON_API = 'http://firstnet18.herokuapp.com/api/speech-to-text/token';
 
 class App extends Component {
@@ -22,24 +23,29 @@ class App extends Component {
     let micButton = this.state.isRecording ? <Icon type="microphone" fill={Colors.red_50} /> : <Icon type="microphone" />;
     return (
       <div className="App">
-        <Header />
+        <div className="content flex-container">
+          <div className="top">
+            <h2>Mapper</h2>
+            {this.renderTabs()}
+          </div>
 
-        {this.renderTabs()}
+          <div className="middle">
+            {this.renderView()}
+          </div>
 
-        <button onClick={e => this.toggleRecording()}>
-          {micButton}
-        </button>
+          <div className="bottom">
+            <button onClick={e => this.toggleRecording()}>
+              {micButton}
+            </button>
 
-        <InputWithButton
-          onSubmit={(e) => {
-            this.setState({ submitText: e.target.value });
-          }}
-          onChange={(e) => this.changeLocation(e)}
-          placeholder="Enter a location"
-          value={this.state.location}
-        />
-
-        {this.renderView()}
+            <InputWithButton
+              onSubmit={(e) => this.sendLocation()}
+              onChange={(e) => this.changeLocation(e)}
+              placeholder="Enter a location"
+              value={this.state.location}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -74,6 +80,22 @@ class App extends Component {
   changeLocation(event) {
     this.setState({
       location: event.target.value
+    });
+  }
+
+  sendLocation() {
+    const location = this.state.location.replace(/\s/g, '+');
+    fetch(GEO_API, {
+      method: 'POST',
+      body: location, 
+    }).then((response) => {
+      return response.text()
+    }).then((geoLocationObj) => {
+      const { geoLocation } = JSON.parse(geoLocationObj);
+      const splitCoords = geoLocation.split(" ");
+      const lat = splitCoords[0];
+      const long = splitCoords[1];
+      console.log(lat, long);
     });
   }
 
