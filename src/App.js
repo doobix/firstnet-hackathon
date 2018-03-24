@@ -25,7 +25,7 @@ class App extends Component {
       <div className="App">
         <div className="content flex-container">
           <div className="top">
-            <h2>Mapper</h2>
+            <h2>Tweet Map</h2>
             {this.renderTabs()}
           </div>
 
