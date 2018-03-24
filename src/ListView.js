@@ -1,27 +1,20 @@
 import React, { Component } from 'react';
+import './ListView.css';
 
 class ListView extends Component {
   render() {
+    console.log(this.props.tweetData);
+
     return (
       <div>
-        <h2>Testing</h2>
-        <p>foo bar</p>
-        <h2>Testing</h2>
-        <p>foo bar</p>
-        <h2>Testing</h2>
-        <p>foo bar</p>
-        <h2>Testing</h2>
-        <p>foo bar</p>
-        <h2>Testing</h2>
-        <p>foo bar</p>
-        <h2>Testing</h2>
-        <p>foo bar</p>
-        <h2>Testing</h2>
-        <p>foo bar</p>
-        <h2>Testing</h2>
-        <p>foo bar</p>
-        <h2>Testing</h2>
-        <p>foo bar</p>
+        <div className="tweet">
+          <p className="tweet-info">
+            <span className="tweet-name">Testing Tester</span>
+            <span className="tweet-username">@test123</span>
+            <span className="tweet-time">12:34pm</span>
+          </p>
+          <p className="tweet-post">foo bar baz</p>
+        </div>
       </div>
     );
   }

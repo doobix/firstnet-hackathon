@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ChatIFrameView from './ChatIFrameView';
 import ListView from './ListView';
 import MapView from './MapView';
 import './App.css';
@@ -16,6 +17,7 @@ class App extends Component {
       isRecording: false,
       stream: null,
       location: '',
+      tweetData: null,
     };
   }
 
@@ -25,7 +27,7 @@ class App extends Component {
       <div className="App">
         <div className="content flex-container">
           <div className="top">
-            <h2>Tweet Map</h2>
+            <h2>Tweetpatcher</h2>
             {this.renderTabs()}
           </div>
 
@@ -66,6 +68,11 @@ class App extends Component {
           id: 'map-button',
           text: 'Map View',
           selected: this.state.view === 'map',
+        }, {
+          value: 'chat',
+          id: 'chat-button',
+          text: 'Chat View',
+          selected: this.state.view === 'chat',
         }]}
       />
     );
@@ -85,9 +92,11 @@ class App extends Component {
 
   sendLocation() {
     const location = this.state.location.replace(/\s/g, '+');
-    fetch(GEO_API, {
-      method: 'POST',
-      body: location, 
+    const data = new FormData();
+    data.append("json", JSON.stringify({ location}));
+
+    fetch(GEO_API + '?location=' + location, {
+      method: 'GET',
     }).then((response) => {
       return response.text()
     }).then((geoLocationObj) => {
@@ -95,16 +104,18 @@ class App extends Component {
       const splitCoords = geoLocation.split(" ");
       const lat = splitCoords[0];
       const long = splitCoords[1];
-      console.log(lat, long);
+      console.log('lat:', lat, 'long:', long);
     });
   }
 
   renderView() {
     switch (this.state.view) {
+      case 'chat':
+        return <ChatIFrameView />;
       case 'map':
         return <MapView />;
       default:
-        return <ListView />;
+        return <ListView tweetData={this.state.tweetData} />;
     }
   }
 
