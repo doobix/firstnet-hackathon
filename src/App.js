@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Recorder from 'recorder-js';
+import { Colors, Icon, InputWithButton } from 'watson-react-components';
 
 class App extends Component {
   constructor(props) {
@@ -9,61 +8,69 @@ class App extends Component {
 
     this.state = {
       isRecording: false,
-      blob: null,
-      audioContext: null,
-      recorder: null,
+      stream: null,
     };
   }
 
-  componentDidMount() {
-    const audioContext =  new (window.AudioContext || window.webkitAudioContext)();
-    const recorder = new Recorder(audioContext);
-
-    this.setState({
-      audioContext,
-      recorder,
-    });
-
-    navigator.mediaDevices.getUserMedia({audio: true})
-      .then(stream => recorder.init(stream))
-      .catch(err => console.log('Uh oh... unable to get stream...', err));
-  }
-
   render() {
+    let micButton = this.state.isRecording ? <Icon type="microphone" fill={Colors.red_50} /> : <Icon type="microphone" />;
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        <button onClick={e => this.startRecording()}>Start Recording</button>
-        <button onClick={e => this.stopRecording()}>Stop Recording</button>
-        <button onClick={e => this.download()}>Download</button>
+        <button onClick={e => this.toggleRecording()}>
+          {micButton}
+        </button>
+
+        <InputWithButton
+          onSubmit={(e) => {
+            this.setState({ submitText: e.target.value });
+          }}
+          placeholder="Input some text here"
+        />
       </div>
     );
   }
 
+  toggleRecording() {
+    if (this.state.isRecording) {
+      this.stopRecording();
+    } else {
+      this.startRecording();
+    }
+    this.setState({
+      isRecording: !this.state.isRecording,
+    });
+  }
+
   startRecording() {
-    this.state.recorder.start()
-      .then(() => {
-        this.setState({
-          isRecording: true
-        });
+    fetch('/api/speech-to-text/token')
+    .then(function(response) {
+        return response.text();
+    }).then(function (token) {
+      var stream = window.WatsonSpeech.SpeechToText.recognizeMicrophone({
+        token: token,
+        object_mode: false
       });
+
+      stream.setEncoding('utf8'); // get text instead of Buffers for on data events
+
+      stream.on('data', function(data) {
+        console.log(data);
+      });
+
+      stream.on('error', function(err) {
+        console.log(err);
+      });
+
+      this.setState({ stream });
+    }).catch(function(error) {
+      console.log(error);
+    });
   }
 
   stopRecording() {
-    this.state.recorder.stop()
-      .then(({blob, buffer}) => {
-        this.setState({ blob });
-      });
-  }
-
-  download() {
-    Recorder.download(this.state.blob, 'my-audio-file');
+    if (this.state.stream) {
+      this.state.stream.stop.bind(this.state.stream);
+    }
   }
 }
 
