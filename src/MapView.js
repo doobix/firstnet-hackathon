@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import ArcGisMap from './ArcGisMap';
 
 class MapView extends Component {
   render() {
     return (
       <div>
-      foo bar
+        <ArcGisMap />
       </div>
     );
   }
