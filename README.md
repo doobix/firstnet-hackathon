@@ -4,7 +4,7 @@ This web app gives first responders the opportunity to see what is happening at 
 
 This is a hackathon project for the [FirstNet Public Safety Hackathon](https://www.eventbrite.com/e/firstnet-public-safety-hackathon-san-francisco-tickets-42037952648).
 
-Developers:
+## Developers:
 
 * [Herman Chan](https://github.com/eps) (Front end)
 * [Jaimes Subroto](https://github.com/jsubroto) (Back end)
