@@ -1,12 +1,12 @@
 .tweet {
-  background-color: #eed2ff;
+  background-color: #c0e6ff;
   border-radius: 5px;
   text-align: left;
   padding: 5px;
 }
 
 .tweet-info {
-
+  margin-top: 0;
 }
 
 .tweet-name {

@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import ChatIFrameView from './ChatIFrameView';
 import ListView from './ListView';
 import MapView from './MapView';
-import './App.css';
 import { ButtonsGroup, Colors, Icon, InputWithButton } from 'watson-react-components';
+import './App.css';
+import fireData from './data/fire'
+import gunData from './data/gun'
+import shootingData from './data/shooting'
 
 const GEO_API = 'http://firstnet18.herokuapp.com/geo';
 const WATSON_API = 'http://firstnet18.herokuapp.com/api/speech-to-text/token';
@@ -18,11 +21,11 @@ class App extends Component {
       stream: null,
       location: '',
       tweetData: null,
+      incident: 'fire',
     };
   }
 
   render() {
-    let micButton = this.state.isRecording ? <Icon type="microphone" fill={Colors.red_50} /> : <Icon type="microphone" />;
     return (
       <div className="App">
         <div className="content flex-container">
@@ -35,11 +38,29 @@ class App extends Component {
             {this.renderView()}
           </div>
 
-          <div className="bottom">
+          {this.renderBottom()}
+        </div>
+      </div>
+    );
+  }
+
+  renderBottom() {
+    if (this.state.view === 'chat') {
+      return;
+    }
+
+    let micButton = this.state.isRecording ? <Icon type="microphone" fill={Colors.red_50} /> : <Icon type="microphone" />;
+    return (
+      <div className="bottom">
+        {this.renderIncidents()}
+
+        <div className="input-container">
+          <div className="input-mic">
             <button onClick={e => this.toggleRecording()}>
               {micButton}
             </button>
-
+          </div>
+          <div className="input-box">
             <InputWithButton
               onSubmit={(e) => this.sendLocation()}
               onChange={(e) => this.changeLocation(e)}
@@ -78,6 +99,39 @@ class App extends Component {
     );
   }
 
+  renderIncidents() {
+    return (
+      <ButtonsGroup
+        type="radio"
+        name="incident-radio-buttons"
+        onClick={e => this.changeIncident(e)}
+        buttons={[{
+          value: 'fire',
+          id: 'fire-button',
+          text: 'Fire Incidents',
+          selected: this.state.incident === 'fire',
+        }, {
+          value: 'gun',
+          id: 'gun-button',
+          text: 'Gun Incidents',
+          selected: this.state.incident === 'gun',
+        }, {
+          value: 'shooting',
+          id: 'shooting-button',
+          text: 'Shootings',
+          selected: this.state.incident === 'shooting',
+        }]}
+      />
+    );
+  }
+
+
+  changeIncident(event) {
+    this.setState({
+      incident: event.target.value,
+    });
+  }
+
   changeView(event) {
     this.setState({
       view: event.target.value,
@@ -104,8 +158,25 @@ class App extends Component {
       const splitCoords = geoLocation.split(" ");
       const lat = splitCoords[0];
       const long = splitCoords[1];
-      console.log('lat:', lat, 'long:', long);
+      this.updateApp(long, lat);
     });
+  }
+
+  updateApp(long, lat) {
+    switch (this.state.incident) {
+      case 'fire':
+        this.setState({ tweetData: fireData });
+        break;
+      case 'gun':
+        this.setState({ tweetData: gunData });
+        break;
+      case 'shooting':
+        this.setState({ tweetData: shootingData });
+        break;
+      default:
+        this.setState({ tweetData: null });
+        break;
+    }
   }
 
   renderView() {
