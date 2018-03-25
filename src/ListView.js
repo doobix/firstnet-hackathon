@@ -4,7 +4,7 @@ import './ListView.css';
 class ListView extends Component {
   render() {
     if (!this.props.tweetData) {
-      return null;
+      return <img src="/tweetpatcher.png" />;
     }
 
     const tweets = []
