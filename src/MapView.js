@@ -3,9 +3,10 @@ import ArcGisMap from './ArcGisMap';
 
 class MapView extends Component {
   render() {
+    console.log(this.props)
     return (
       <div>
-        <ArcGisMap />
+        <ArcGisMap coords={this.props}/>
       </div>
     );
   }

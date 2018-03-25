@@ -28,30 +28,18 @@ class ArcGisMap extends Component {
   }
 
   componentDidMount() {
-    loadModules(['esri/Map', 'esri/views/MapView', 'esri/Graphic', 'esri/symbols/SimpleMarkerSymbol', 'esri/Color', 'esri/symbols/SimpleLineSymbol'], options)
+    const coords = this.props.coords.coords;
+    loadModules(['esri/Map', 'esri/views/MapView', 'esri/Graphic', 'esri/symbols/SimpleMarkerSymbol', 'esri/Color'], options)
       .then(([Map, MapView, SimpleMarkerSymbol, Color, Graphic]) => {
         const map = new Map({ basemap: "streets" });
         const view = new MapView({
           container: "viewDiv",
           map,
-          zoom: 15,
-          center: [-122.445, 37.752]
+          zoom: 17,
+          center: coords
         });
-        // const fillSymbol = {
-        //   type: "simple-fill", // autocasts as new SimpleFillSymbol()
-        //   color: [227, 139, 79, 0.8],
-        //   outline: { // autocasts as new SimpleLineSymbol()
-        //   color: [255, 255, 255],
-        //   width: 1
-        //   }
-        // };
-        // const graphic = new Graphic({
-        //   symbol: fillSymbol
-        // });
-
         view.then(() => {
           this.setState({
-            // graphic,
             map,
             view,
             status: 'loaded',

@@ -18,6 +18,8 @@ class App extends Component {
       stream: null,
       location: '',
       tweetData: null,
+      long: '',
+      lat: ''
     };
   }
 
@@ -104,6 +106,10 @@ class App extends Component {
       const splitCoords = geoLocation.split(" ");
       const lat = splitCoords[0];
       const long = splitCoords[1];
+      this.setState({
+        long: splitCoords[1],
+        lat: splitCoords[0]
+      })
       console.log('lat:', lat, 'long:', long);
     });
   }
@@ -113,7 +119,7 @@ class App extends Component {
       case 'chat':
         return <ChatIFrameView />;
       case 'map':
-        return <MapView />;
+        return <MapView coords={[this.state.long, this.state.lat]}/>;
       default:
         return <ListView tweetData={this.state.tweetData} />;
     }
