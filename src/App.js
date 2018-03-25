@@ -31,7 +31,7 @@ class App extends Component {
       <div className="App">
         <div className="content flex-container">
           <div className="top">
-            <h2>Tweetpatcher</h2>
+            <h2><img src="/tweetpatcher.png" className="logo" /> Tweetpatcher</h2>
             {this.renderTabs()}
           </div>
 
