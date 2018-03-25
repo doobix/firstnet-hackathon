@@ -5,6 +5,10 @@
   padding: 5px;
 }
 
+.tweet p {
+  font-size: 14px;
+}
+
 .tweet-info {
   margin-top: 0;
 }
