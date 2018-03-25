@@ -13,8 +13,7 @@ const styles =  {
   mapDiv: {
     padding: 0,
     margin: 0,
-    height: '100%',
-    width: '100%'
+    height: '100vw'
   },
 }
 
@@ -35,7 +34,7 @@ class ArcGisMap extends Component {
         const view = new MapView({
           container: "viewDiv",
           map,
-          zoom: 17,
+          zoom: 16,
           center: coords
         });
         view.then(() => {
@@ -57,12 +56,12 @@ class ArcGisMap extends Component {
 
   render() {
     console.log(this.state)
-    return(
-          <div style={styles.container}>
-            <div id='viewDiv' style={ styles.mapDiv } >
-              {this.renderMap()}
-            </div>
-          </div>
+    return (
+      <div style={styles.container}>
+        <div id='viewDiv' style={ styles.mapDiv } >
+          {this.renderMap()}
+        </div>
+      </div>
     )
   }
 }

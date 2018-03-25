@@ -3,18 +3,33 @@ import './ListView.css';
 
 class ListView extends Component {
   render() {
-    console.log(this.props.tweetData);
+    if (!this.props.tweetData) {
+      return null;
+    }
+
+    const tweets = []
+    this.props.tweetData.forEach((tweet, index) => {
+      tweets.push(this.renderTweet(tweet, index));
+    });
 
     return (
       <div>
-        <div className="tweet">
-          <p className="tweet-info">
-            <span className="tweet-name">Testing Tester</span>
-            <span className="tweet-username">@test123</span>
-            <span className="tweet-time">12:34pm</span>
-          </p>
-          <p className="tweet-post">foo bar baz</p>
-        </div>
+        {tweets}
+      </div>
+    );
+  }
+
+  renderTweet(tweet, index) {
+    return (
+      <div className="tweet" key={index}>
+        <p className="tweet-info">
+          <span className="tweet-name">{tweet.user.name}</span>
+          <span className="tweet-username">@{tweet.user.screen_name}</span>
+        </p>
+        <p className="tweet-post">{tweet.text}</p>
+        <p className="tweet-info">
+          <span className="tweet-time">{tweet.created_at}</span>
+        </p>
       </div>
     );
   }
