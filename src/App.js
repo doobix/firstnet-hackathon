@@ -22,6 +22,7 @@ class App extends Component {
       location: '',
       tweetData: null,
       incident: 'fire',
+      isLoading: false,
     };
   }
 
@@ -30,7 +31,7 @@ class App extends Component {
       <div className="App">
         <div className="content flex-container">
           <div className="top">
-            <h2>Tweetpatcher</h2>
+            <h2><img src="/tweetpatcher.png" className="logo" /> Tweetpatcher</h2>
             {this.renderTabs()}
           </div>
 
@@ -145,6 +146,8 @@ class App extends Component {
   }
 
   sendLocation() {
+    this.setState({ isLoading: true });
+
     const location = this.state.location.replace(/\s/g, '+');
     const data = new FormData();
     data.append("json", JSON.stringify({ location}));
@@ -163,7 +166,7 @@ class App extends Component {
   }
 
   updateApp(long, lat) {
-    this.setState({long, lat});
+    this.setState({long, lat, isLoading: false});
     switch (this.state.incident) {
       case 'fire':
         this.setState({ tweetData: fireData });
@@ -181,6 +184,10 @@ class App extends Component {
   }
 
   renderView() {
+    if (this.state.isLoading) {
+      return <Icon type="loader" />;
+    }
+
     switch (this.state.view) {
       case 'chat':
         return <ChatIFrameView />;
